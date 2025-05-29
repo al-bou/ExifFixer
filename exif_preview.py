@@ -5,7 +5,7 @@ import subprocess
 
 
 # === Configuration ===
-DOSSIER_PHOTOS = Path("F:\Run/2019/03")  # adapte ce chemin à ton cas
+DOSSIER_PHOTOS = Path("F:\Run/2019/")  # adapte ce chemin à ton cas
 DOSSIER_TRAITES = Path("F:/Run/processed")       # Dossier où déplacer les fichiers traités
 EXECUTER_EXIFTOOL = True  # True pour appliquer, False pour dry-run
 DOSSIER_NON_IDENTIFIES = Path("F:/Run/unmatched")
@@ -71,8 +71,8 @@ def nom_disponible(destination: Path) -> Path:
 # === Traitement
 print("📂 Début du traitement...\n")
 compteur = 0
-stop_iter = 1000
-for fichier in DOSSIER_PHOTOS.iterdir():
+stop_iter = 30
+for fichier in DOSSIER_PHOTOS.rglob("*"):
     # Supprimer les fichiers .xmp (fichiers de métadonnées inutiles pour Immich)
     if fichier.suffix.lower() == ".xmp":
         print(f"🗑️ Suppression du fichier XMP : {fichier.name}")
@@ -87,6 +87,7 @@ for fichier in DOSSIER_PHOTOS.iterdir():
         print(f"▶️ [{compteur}/{stop_iter}] Traitement : {fichier.name}")
     if not fichier.is_file():
         continue
+    chemin_relatif = fichier.relative_to(DOSSIER_PHOTOS)
     traité = False
 
     for pattern, type_nom in regex_patterns:
@@ -162,15 +163,19 @@ for fichier in DOSSIER_PHOTOS.iterdir():
                 nom_nettoye = f"{yyyy}-{mm}-{dd}_{HH}-{MM}-{SS}{fichier.suffix.lower()}"
 
                 print('nom nettoyé : '+nom_nettoye)
-                destination_brut = DOSSIER_TRAITES / nom_nettoye
+                # Dossier complet avec sous-dossiers reconstruits
+                destination_brut = (DOSSIER_TRAITES / chemin_relatif.parent / nom_nettoye)
                 destination = nom_disponible(destination_brut)
+                destination.parent.mkdir(parents=True, exist_ok=True)
                 shutil.move(str(fichier), destination)
                 print(f"📁 Fichier déplacé vers : {destination}\n")
             traité = True
             break
     if not traité:
-        destination = nom_disponible(DOSSIER_NON_IDENTIFIES / fichier.name)
-        if fichier.exists():
+        destination = nom_disponible(DOSSIER_NON_IDENTIFIES / chemin_relatif)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+
+        if fichier.exists() & EXECUTER_EXIFTOOL :
             shutil.move(str(fichier), destination)
             print(f"❓ Aucun format reconnu → déplacé vers : {destination}\n")
         else:

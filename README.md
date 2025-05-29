@@ -10,15 +10,31 @@ When photos are exported, transferred, or recovered from various apps or service
 ## 🔧 Features
 
 - Supports over 15 common filename formats from phones and messaging apps.
+- Recursively scans folders (including subfolders).
 - Applies EXIF metadata using `exiftool`.
 - Renames files using a consistent `YYYY-MM-DD_HH-MM-SS.ext` format.
+- Reconstructs the original folder hierarchy in the output folder.
 - Handles filename collisions (`photo (1).jpg`, `photo (2).jpg`, etc.).
-- Moves processed files to a target folder.
-- Moves unmatched files (those that don't match any pattern) to a separate folder.
+- Moves processed files to a target folder (`processed/`), keeping folder structure.
+- Moves unmatched files (those that don't match any pattern) to a separate folder (`unmatched/`).
 
-## 📁 Folder Structure (customize to your setup)
+## ▶️ Usage
+
+1. Clone this repository:
 
 ```bash
-F:/Run/2019/03           # Source folder with files to process
-F:/Run/processed         # Destination for processed files
-F:/Run/unmatched         # Destination for unrecognized files
+git clone https://github.com/al-bou/ExifFixer.git
+cd ExifFixer
+```
+2. Update the # === Configuration === section in the script:
+
+- Set your input folder (DOSSIER_PHOTOS)
+- Set output folder for processed files (DOSSIER_TRAITES)
+- Set folder for unmatched files (DOSSIER_NON_IDENTIFIES)
+- Set EXECUTER_EXIFTOOL = True to apply changes, or False for dry run.
+
+3. Run the script:
+
+```bash
+python exif_preview.py
+```
