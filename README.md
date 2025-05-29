@@ -1,24 +1,24 @@
 # ExifFixer
 
-📸 Script Python pour corriger automatiquement les métadonnées EXIF de vos photos et vidéos, à partir du nom de fichier.
+📸 A Python script to automatically fix EXIF metadata (date and time) of photos and videos by extracting timestamps from the filenames.
 
-## 🚀 Objectif
+## 🚀 Purpose
 
-Quand les photos sont exportées, transférées ou récupérées depuis différentes apps ou services (WhatsApp, Signal, Android, etc.), elles perdent souvent leurs métadonnées de date/heure d’origine.  
-`ExifFixer` analyse les noms de fichiers pour en extraire la date et l’heure, et réinjecte ces informations dans les champs EXIF (`DateTimeOriginal`, `CreateDate`, `ModifyDate`), grâce à [ExifTool](https://exiftool.org/).
+When photos are exported, transferred, or recovered from various apps or services (WhatsApp, Signal, Android, etc.), they often lose their original date/time metadata.  
+`ExifFixer` scans filenames, extracts date/time information using regex patterns, and updates the EXIF fields (`DateTimeOriginal`, `CreateDate`, `ModifyDate`) using [ExifTool](https://exiftool.org/).
 
-## 🔧 Fonctionnalités
+## 🔧 Features
 
-- Reconnaît plus de 15 formats de noms de fichiers issus de téléphones ou applications diverses.
-- Applique les dates EXIF extraites via `exiftool`.
-- Renomme les fichiers au format `YYYY-MM-DD_HH-MM-SS.jpg`.
-- Gère les doublons (`photo (1).jpg`, `photo (2).jpg`...).
-- Déplace les fichiers traités dans un dossier cible.
-- Archive les fichiers non reconnus dans un dossier séparé.
+- Supports over 15 common filename formats from phones and messaging apps.
+- Applies EXIF metadata using `exiftool`.
+- Renames files using a consistent `YYYY-MM-DD_HH-MM-SS.ext` format.
+- Handles filename collisions (`photo (1).jpg`, `photo (2).jpg`, etc.).
+- Moves processed files to a target folder.
+- Moves unmatched files (those that don't match any pattern) to a separate folder.
 
-## 📁 Structure des dossiers (à adapter)
+## 📁 Folder Structure (customize to your setup)
 
 ```bash
-F:/Run/2019/03           # Dossier source contenant les fichiers à traiter
-F:/Run/processed         # Dossier destination des fichiers traités
-F:/Run/unmatched         # Dossier des fichiers dont le nom est non reconnu
+F:/Run/2019/03           # Source folder with files to process
+F:/Run/processed         # Destination for processed files
+F:/Run/unmatched         # Destination for unrecognized files
